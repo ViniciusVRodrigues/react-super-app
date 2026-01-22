@@ -1,0 +1,24 @@
+.nav-link {
+  text-decoration: none;
+  color: #888;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+
+.nav-link:hover {
+  color: #fff;
+}
+
+.nav-link.active {
+  color: #646cff;
+  background: rgba(100, 108, 255, 0.1);
+}
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+  .nav-link:hover {
+    color: #213547;
+  }
+}

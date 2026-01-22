@@ -1,4 +1,4 @@
-import RemoteWrapper from '../components/RemoteWrapper';
+import { RemoteWrapper, CodeBlock, ErrorMessage } from '../components';
 import { createRemoteComponent } from '../utils/createRemoteComponent';
 import './ExampleRemotePage.css';
 
@@ -20,27 +20,50 @@ const ExampleRemotePage = () => {
       </p>
       
       <div className="remote-info">
-        <h2>Como usar:</h2>
+        <h2>Passo 1: Configurar o módulo remoto</h2>
         <p>
-          Para conectar um módulo remoto real, configure-o no arquivo <code>vite.config.ts</code>:
+          Adicione a URL do módulo remoto no arquivo <code>vite.config.ts</code>:
         </p>
-        <pre>
-{`remotes: {
-  remoteApp: 'http://localhost:3001/assets/remoteEntry.js',
-}`}
-        </pre>
+        <CodeBlock code={`// vite.config.ts
+federation({
+  name: 'superApp',
+  remotes: {
+    remoteApp: 'http://localhost:3001/assets/remoteEntry.js',
+  },
+  shared: ['react', 'react-dom', 'react-router-dom'],
+})`} />
+      </div>
+
+      <div className="remote-info">
+        <h2>Passo 2: Declarar os tipos</h2>
         <p>
-          Depois, crie o componente remoto e use o <code>RemoteWrapper</code>:
+          Adicione a declaração de tipos em <code>src/remotes.d.ts</code>:
         </p>
-        <pre>
-{`// Fora do componente (no topo do arquivo)
+        <CodeBlock code={`declare module 'remoteApp/Component' {
+  import { ComponentType } from 'react';
+  const Component: ComponentType<Record<string, unknown>>;
+  export default Component;
+}`} />
+      </div>
+
+      <div className="remote-info">
+        <h2>Passo 3: Criar o componente remoto</h2>
+        <p>
+          Use o <code>createRemoteComponent</code> e <code>RemoteWrapper</code>:
+        </p>
+        <CodeBlock code={`// No topo do arquivo (fora do componente)
+import { RemoteWrapper } from '../components';
+import { createRemoteComponent } from '../utils/createRemoteComponent';
+
 const RemoteApp = createRemoteComponent(
   () => import('remoteApp/Component')
 );
 
 // No JSX
-<RemoteWrapper remoteComponent={RemoteApp} />`}
-        </pre>
+<RemoteWrapper 
+  remoteComponent={RemoteApp}
+  errorFallback={<div>Erro ao carregar</div>}
+/>`} />
       </div>
 
       <div className="demo-section">
@@ -52,11 +75,11 @@ const RemoteApp = createRemoteComponent(
         <RemoteWrapper 
           remoteComponent={FailingRemoteComponent}
           errorFallback={
-            <div className="error-container">
-              <h3>⚠️ Módulo não disponível</h3>
-              <p>Este é um exemplo de como o Super App lida com erros de módulos remotos.</p>
-              <p>O aplicativo continua funcionando normalmente!</p>
-            </div>
+            <ErrorMessage 
+              title="⚠️ Módulo não disponível"
+              message="Este é um exemplo de como o Super App lida com erros de módulos remotos."
+              details="O aplicativo continua funcionando normalmente!"
+            />
           }
         />
       </div>
