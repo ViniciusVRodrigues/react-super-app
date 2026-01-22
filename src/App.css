@@ -1,0 +1,74 @@
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+/* Loading styles */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: #888;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top: 4px solid #646cff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error styles */
+.error-container {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(255, 100, 100, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 100, 100, 0.3);
+}
+
+.error-container h2,
+.error-container h3 {
+  color: #ff6b6b;
+  margin-bottom: 1rem;
+}
+
+.error-container p {
+  color: #ccc;
+  margin-bottom: 0.5rem;
+}
+
+.error-details {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  color: #888;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  display: inline-block;
+  margin: 1rem 0;
+}
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+  .error-container {
+    background: rgba(255, 100, 100, 0.05);
+  }
+  
+  .error-container p {
+    color: #555;
+  }
+}
