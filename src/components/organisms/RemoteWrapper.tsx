@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import type { ReactNode, ComponentType } from 'react';
-import { Loading } from '../atoms';
-import ErrorBoundary from '../ErrorBoundary';
+import { Loading, ErrorBoundary } from '../';
 
 interface RemoteWrapperProps {
   remoteComponent: React.LazyExoticComponent<ComponentType<Record<string, unknown>>>;

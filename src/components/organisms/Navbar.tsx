@@ -32,7 +32,6 @@ const Navbar = ({ brand = '🚀 Super App', navItems }: NavbarProps) => {
             isActive={location.pathname === item.to} 
           />
         ))}
-        {/* Add more navigation links for remote modules here */}
       </ul>
     </nav>
   );
