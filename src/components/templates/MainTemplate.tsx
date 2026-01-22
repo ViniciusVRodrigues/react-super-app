@@ -15,6 +15,7 @@ const defaultNavItems: NavItem[] = [
   { to: '/', label: 'Home' },
   { to: '/example', label: 'Exemplo' },
   { to: '/todo', label: 'Todo List' },
+  { to: '/edespensa', label: 'eDespensa' },
 ];
 
 /**

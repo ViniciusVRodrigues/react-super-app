@@ -3,15 +3,15 @@ import { createRemoteComponent } from '../utils/createRemoteComponent';
 import './TodoList.css';
 
 // Create the lazy-loaded component outside of render
-const TodoListRemote = createRemoteComponent(
-    () => import('todoApp/App')
+const EDespensaRemote = createRemoteComponent(
+    () => import('eDespensa/App')
 );
 
-const TodoList = () => {
+const EDespensa = () => {
     return (
         <div className="todo-list-page">
             <RemoteWrapper 
-                remoteComponent={TodoListRemote} 
+                remoteComponent={EDespensaRemote} 
                 errorFallback={
                     <ErrorMessage 
                         title="⚠️ Módulo não disponível"
@@ -24,4 +24,4 @@ const TodoList = () => {
     );
 }
 
-export default TodoList;
+export default EDespensa;
