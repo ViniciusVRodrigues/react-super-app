@@ -1,4 +1,4 @@
-import RemoteWrapper from '../components/RemoteWrapper';
+import { RemoteWrapper, ErrorMessage } from '../components';
 import { createRemoteComponent } from '../utils/createRemoteComponent';
 import './TodoList.css';
 
@@ -11,13 +11,16 @@ const TodoList = () => {
     return (
         <div className="todo-list-page">
             <h1>Todo List from Remote App</h1>
-            <RemoteWrapper remoteComponent={TodoListRemote} errorFallback={
-                <div className="error-container">
-                    <h3>⚠️ Módulo não disponível</h3>
-                    <p>Este é um exemplo de como o Super App lida com erros de módulos remotos.</p>
-                    <p>O aplicativo continua funcionando normalmente!</p>
-                </div>
-            } />
+            <RemoteWrapper 
+                remoteComponent={TodoListRemote} 
+                errorFallback={
+                    <ErrorMessage 
+                        title="⚠️ Módulo não disponível"
+                        message="Este é um exemplo de como o Super App lida com erros de módulos remotos."
+                        details="O aplicativo continua funcionando normalmente!"
+                    />
+                } 
+            />
         </div>
     );
 }

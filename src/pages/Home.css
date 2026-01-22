@@ -129,11 +129,39 @@
 
 .documentation ol {
   padding-left: 1.5rem;
-  line-height: 2;
+  line-height: 1.8;
+  list-style: none;
+  counter-reset: item;
 }
 
 .documentation li {
   color: #ccc;
+  margin-bottom: 1.5rem;
+  counter-increment: item;
+  position: relative;
+  padding-left: 2rem;
+}
+
+.documentation li::before {
+  content: counter(item);
+  position: absolute;
+  left: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #646cff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: white;
+}
+
+.documentation li strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #fff;
 }
 
 .documentation code {
@@ -141,6 +169,10 @@
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-family: 'Fira Code', monospace;
+}
+
+.atomic-structure {
+  margin-top: 1rem;
 }
 
 /* Loading styles */
