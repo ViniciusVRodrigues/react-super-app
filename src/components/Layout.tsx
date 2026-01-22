@@ -25,6 +25,13 @@ const Layout = ({ children }: LayoutProps) => {
               Exemplo
             </Link>
           </li>
+          <li>
+            <Link to="/todo" className={location.pathname === '/todo' ? 'active' : ''}>
+              Todo List
+            </Link>
+          </li>
+          {/* Add more navigation links for remote modules here */}
+
         </ul>
       </nav>
       <main className="main-content">

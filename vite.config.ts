@@ -13,6 +13,7 @@ export default defineConfig({
       remotes: {
         // Example configuration:
         // remoteApp: 'http://localhost:3001/assets/remoteEntry.js',
+        todoApp: 'http://localhost:3001/assets/remoteEntry.js',
       },
       // Shared dependencies between host and remotes
       shared: ['react', 'react-dom', 'react-router-dom'],
