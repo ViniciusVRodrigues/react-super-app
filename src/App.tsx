@@ -14,7 +14,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/example" element={<ExampleRemotePage />} />
           <Route path="/todo" element={<TodoList />} />
-          <Route path="/edespensa" element={<EDespensa />} />
+          <Route path="/edespensa//*" element={<EDespensa />} />
           {/* Add more remote module routes here */}
         </Routes>
       </MainTemplate>

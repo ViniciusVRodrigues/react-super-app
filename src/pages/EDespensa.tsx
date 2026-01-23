@@ -4,7 +4,7 @@ import './TodoList.css';
 
 // Create the lazy-loaded component outside of render
 const EDespensaRemote = createRemoteComponent(
-    () => import('eDespensa/App')
+    () => import('despensa_inteligente/App')
 );
 
 const EDespensa = () => {

@@ -4,7 +4,7 @@ declare module 'todoApp/App' {
   export default App;
 }
 
-declare module 'eDespensa/App' {
+declare module 'despensa_inteligente/App' {
   import { ComponentType } from 'react';
   const App: ComponentType<Record<string, unknown>>;
   export default App;
