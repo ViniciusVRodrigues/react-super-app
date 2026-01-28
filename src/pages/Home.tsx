@@ -107,14 +107,12 @@ const Home = () => {
         <h3>📝 No Aplicativo Remoto</h3>
         <p>O aplicativo remoto deve exportar suas rotas:</p>
         <CodeBlock code={`// src/routes.ts no app remoto
-import App from './App';
-
 const routes = [
   {
     path: '/nova-app',
     label: 'Nova App',
     icon: '🚀',
-    component: App,
+    component: 'App', // Nome do componente exposto
     showInNav: true,
   },
 ];

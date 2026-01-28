@@ -105,33 +105,71 @@ Com o novo sistema de carregamento dinâmico, o módulo remoto pode exportar sua
 
 #### No Aplicativo Remoto
 
-**1. Crie um arquivo de rotas (`src/routes.ts` ou `src/routes.tsx`)**
+**1. Crie um arquivo de rotas (`src/routes.ts`)**
 
 ```typescript
-import { RouteConfig } from '@types/routes'; // Ou defina localmente
-import TodoApp from './App';
+export interface RouteConfig {
+  path: string;
+  label: string;
+  icon?: string;
+  component: string; // Nome do componente exposto no module federation
+  showInNav?: boolean;
+}
 
 const routes: RouteConfig[] = [
   {
     path: '/todo',
     label: 'Todo List',
     icon: '✅',
-    component: TodoApp,
-    showInNav: true, // Aparecerá no menu de navegação
+    component: 'App', // Nome do componente exposto
+    showInNav: true,
   },
 ];
 
 export default routes;
 ```
 
-**2. Exponha as rotas no `vite.config.ts` do aplicativo remoto**
+**Exemplo com múltiplas rotas (como despensa_inteligente):**
+
+```typescript
+const routes: RouteConfig[] = [
+  {
+    path: '/edespensa',
+    label: 'Dashboard',
+    icon: '📊',
+    component: 'Dashboard',
+    showInNav: true,
+  },
+  {
+    path: '/edespensa/products',
+    label: 'Produtos',
+    icon: '📦',
+    component: 'Products',
+    showInNav: true,
+  },
+  {
+    path: '/edespensa/pantry',
+    label: 'Despensa',
+    icon: '🏠',
+    component: 'Pantry',
+    showInNav: true,
+  },
+];
+
+export default routes;
+```
+
+**2. Exponha os componentes e rotas no `vite.config.ts` do aplicativo remoto**
 
 ```typescript
 federation({
-  name: 'todoApp',
+  name: 'despensa_inteligente',
   filename: 'remoteEntry.js',
   exposes: {
-    './App': './src/App.tsx',
+    // Exponha cada componente individualmente
+    './Dashboard': './src/pages/Dashboard.tsx',
+    './Products': './src/pages/Products.tsx',
+    './Pantry': './src/pages/Pantry.tsx',
     './routes': './src/routes.ts', // Exponha as rotas
   },
   shared: ['react', 'react-dom', 'react-router-dom'],
@@ -206,36 +244,16 @@ declare module 'remoteApp/Component' {
 
 **3. Criar uma configuração de rotas em `src/config/`**
 
-```tsx
-// src/config/remoteAppRoutes.tsx
+```typescript
+// src/config/remoteAppRoutes.ts
 import type { RouteConfig } from '../types/routes';
-import { RemoteWrapper, ErrorMessage } from '../components';
-import { createRemoteComponent } from '../utils/createRemoteComponent';
-
-const RemoteAppComponent = createRemoteComponent(
-  () => import('remoteApp/Component')
-);
-
-const RemoteAppPage = () => (
-  <div>
-    <RemoteWrapper 
-      remoteComponent={RemoteAppComponent}
-      errorFallback={
-        <ErrorMessage 
-          title="Módulo não disponível"
-          message="Não foi possível carregar o módulo."
-        />
-      }
-    />
-  </div>
-);
 
 export const remoteAppRoutes: RouteConfig[] = [
   {
     path: '/remote-app',
     label: 'Remote App',
     icon: '🚀',
-    component: RemoteAppPage,
+    component: 'App', // Nome do componente exposto
     showInNav: true,
   },
 ];
@@ -287,8 +305,8 @@ src/
 │   └── index.ts            # Exports centralizados
 ├── config/                 # Configurações do Super App
 │   ├── remoteApps.ts       # Lista de aplicativos remotos
-│   ├── todoAppRoutes.tsx   # Rotas de fallback para todoApp
-│   └── despensaAppRoutes.tsx # Rotas de fallback para despensa
+│   ├── todoAppRoutes.ts    # Rotas de fallback para todoApp
+│   └── despensaAppRoutes.ts # Rotas de fallback para despensa
 ├── pages/
 │   ├── Home.tsx            # Página inicial com documentação
 │   └── ExampleRemotePage.tsx # Exemplo de página com módulo remoto
@@ -316,18 +334,16 @@ export interface RouteConfig {
   path: string;
   label: string;
   icon?: string;
-  component: ComponentType<Record<string, unknown>>;
+  component: string; // Nome do componente exposto no module federation
   showInNav?: boolean;
 }
-
-import App from './App';
 
 const routes: RouteConfig[] = [
   {
     path: '/todo',
     label: 'Todo List',
     icon: '✅',
-    component: App,
+    component: 'App', // Nome do componente exposto
     showInNav: true,
   },
 ];
