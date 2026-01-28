@@ -33,7 +33,7 @@ const createFallbackComponent = (
   remoteAppName: string,
   componentName: string
 ): ComponentType<Record<string, unknown>> => {
-  return () => (
+  const FallbackComponent = () => (
     <div style={{ padding: '2rem', textAlign: 'center' }}>
       <h2>⚠️ Componente não disponível</h2>
       <p>Não foi possível carregar o componente: {componentName}</p>
@@ -46,6 +46,10 @@ const createFallbackComponent = (
       </p>
     </div>
   );
+  
+  FallbackComponent.displayName = `FallbackComponent(${remoteAppName}/${componentName})`;
+  
+  return FallbackComponent;
 };
 
 /**
