@@ -34,15 +34,54 @@ export const loadRemoteRoutes = async (
   remoteAppName: string
 ): Promise<RemoteRouteConfig[]> => {
   try {
+    console.log(`🔄 Loading remote routes from: ${remoteAppName}`);
     const module = await loader();
     const routes = module.default || [];
+    console.log(`✅ Successfully loaded ${routes.length} route(s) from ${remoteAppName}`);
     // Add remote app name to each route
     return routes.map(route => ({
       ...route,
       remoteApp: remoteAppName,
     }));
   } catch (error) {
-    console.warn(`Failed to load remote routes from ${remoteAppName}:`, error);
+    console.error(`❌ Failed to load remote routes from ${remoteAppName}`);
+    console.group(`🔍 Diagnostic Information for ${remoteAppName}`);
+    console.error('Error details:', error);
+    
+    // Provide helpful diagnostic information
+    if (error instanceof Error) {
+      if (error.message.includes('Failed to fetch')) {
+        console.error('⚠️ Network Error: Could not fetch the remote module.');
+        console.log('📝 Possible causes:');
+        console.log('  1. Remote entry URL is incorrect');
+        console.log('  2. Remote app is not deployed or not accessible');
+        console.log('  3. CORS policy is blocking the request');
+        console.log('  4. Network connectivity issues');
+        console.log('\n💡 To fix:');
+        console.log(`  1. Check .env.production for VITE_${remoteAppName.toUpperCase()}_URL`);
+        console.log(`  2. Verify the remote app is deployed and accessible`);
+        console.log(`  3. Try accessing the remoteEntry.js URL directly in browser`);
+      } else if (error.message.includes('Shared module is not available')) {
+        console.error('⚠️ Shared Module Error: Dependency version mismatch.');
+        console.log('📝 Possible causes:');
+        console.log('  1. React versions differ between host and remote');
+        console.log('  2. Shared dependencies are not properly configured');
+        console.log('\n💡 To fix:');
+        console.log('  1. Ensure both apps use the same React version');
+        console.log('  2. Check shared config in vite.config.ts');
+      } else if (error.message.includes('Cannot find module')) {
+        console.error('⚠️ Module Not Found: The remote app doesn\'t expose this module.');
+        console.log('📝 Possible causes:');
+        console.log('  1. Remote app doesn\'t export routes');
+        console.log('  2. Module name doesn\'t match the exposed name');
+        console.log('\n💡 To fix:');
+        console.log(`  1. Check if ${remoteAppName} exposes './routes' in vite.config.ts`);
+        console.log('  2. Fallback routes will be used if configured');
+      }
+    }
+    
+    console.log('\n📚 See TROUBLESHOOTING_REMOTES.md for detailed debugging steps');
+    console.groupEnd();
     return [];
   }
 };

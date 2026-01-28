@@ -8,6 +8,7 @@ import type { RemoteRouteConfig } from './types/routes';
 import { loadMultipleRemoteRoutes, type RouteLoader } from './utils/loadRemoteRoutes';
 import { createRemoteComponentByName } from './utils/createRemoteComponentByName';
 import { remoteApps } from './config/remoteApps';
+import { diagnoseAllRemotes } from './utils/diagnosticRemotes';
 import './App.css';
 
 function App() {
@@ -16,6 +17,28 @@ function App() {
 
   useEffect(() => {
     const loadRoutes = async () => {
+      // Log remote configuration for debugging
+      console.group('🚀 Super App - Remote Module Configuration');
+      console.log('Base Path:', import.meta.env.VITE_BASE_PATH || '/');
+      console.log('Todo App URL:', import.meta.env.VITE_TODO_APP_URL);
+      console.log('Despensa App URL:', import.meta.env.VITE_DESPENSA_APP_URL);
+      console.groupEnd();
+
+      // Run diagnostics on remote entries (only in development or when needed)
+      if (import.meta.env.DEV || import.meta.env.VITE_RUN_DIAGNOSTICS === 'true') {
+        const remoteUrls: Record<string, string> = {};
+        if (import.meta.env.VITE_TODO_APP_URL) {
+          remoteUrls.todoApp = import.meta.env.VITE_TODO_APP_URL;
+        }
+        if (import.meta.env.VITE_DESPENSA_APP_URL) {
+          remoteUrls.despensa_inteligente = import.meta.env.VITE_DESPENSA_APP_URL;
+        }
+        
+        if (Object.keys(remoteUrls).length > 0) {
+          await diagnoseAllRemotes(remoteUrls);
+        }
+      }
+
       // Get all enabled remote apps with route loaders
       const loaders = remoteApps
         .filter(app => app.enabled && app.routeLoader !== null)
