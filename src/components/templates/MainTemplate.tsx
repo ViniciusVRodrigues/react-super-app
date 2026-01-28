@@ -1,5 +1,5 @@
 import { Navbar, Footer } from '../organisms';
-import type { RouteConfig } from '../../types/routes';
+import type { RemoteRouteConfig } from '../../types/routes';
 import './MainTemplate.css';
 
 interface NavItem {
@@ -10,7 +10,7 @@ interface NavItem {
 interface MainTemplateProps {
   children: React.ReactNode;
   navItems?: NavItem[];
-  remoteRoutes?: RouteConfig[];
+  remoteRoutes?: RemoteRouteConfig[];
   isLoadingRoutes?: boolean;
 }
 

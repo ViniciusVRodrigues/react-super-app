@@ -1,5 +1,3 @@
-import type { ComponentType } from 'react';
-
 /**
  * Interface for a route configuration
  */
@@ -20,13 +18,27 @@ export interface RouteConfig {
   icon?: string;
   
   /**
-   * The React component to render for this route
+   * Name of the exposed component in module federation
+   * For remote apps, this should match the key in the 'exposes' config
+   * Example: 'App', 'Dashboard', 'Products'
    */
-  component: ComponentType<Record<string, unknown>>;
+  component: string;
   
   /**
    * Whether to show this route in the navigation menu
    * @default true
    */
   showInNav?: boolean;
+}
+
+/**
+ * Extended route config with remote app information
+ * Used internally by the super app
+ */
+export interface RemoteRouteConfig extends RouteConfig {
+  /**
+   * The name of the remote app this route belongs to
+   * Must match the name in vite.config.ts remotes
+   */
+  remoteApp: string;
 }
