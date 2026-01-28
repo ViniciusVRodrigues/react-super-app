@@ -28,8 +28,11 @@ function App() {
     loadRoutes();
   }, []); // remoteApps is a constant, safe to omit from dependencies
 
+  // Get base path from environment variable, default to '/'
+  const basename = import.meta.env.VITE_BASE_PATH || '/';
+
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <MainTemplate remoteRoutes={remoteRoutes} isLoadingRoutes={isLoadingRoutes}>
         <Routes>
           {/* Static routes */}
