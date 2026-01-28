@@ -295,7 +295,7 @@ export interface RouteConfig {
   path: string;
   label: string;
   icon?: string;
-  component: ComponentType<any>;
+  component: ComponentType<Record<string, unknown>>;
   showInNav?: boolean;
 }
 

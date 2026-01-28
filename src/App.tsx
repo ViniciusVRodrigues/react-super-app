@@ -4,7 +4,7 @@ import { MainTemplate } from './components';
 import Home from './pages/Home';
 import ExampleRemotePage from './pages/ExampleRemotePage';
 import type { RouteConfig } from './types/routes';
-import { loadMultipleRemoteRoutes } from './utils/loadRemoteRoutes';
+import { loadMultipleRemoteRoutes, type RouteLoader } from './utils/loadRemoteRoutes';
 import { remoteApps } from './config/remoteApps';
 import './App.css';
 
@@ -17,7 +17,7 @@ function App() {
       // Get all enabled remote apps with route loaders
       const loaders = remoteApps
         .filter(app => app.enabled && app.routeLoader !== null)
-        .map(app => app.routeLoader!);
+        .map(app => app.routeLoader as RouteLoader);
 
       // Load routes from all remote apps
       const routes = await loadMultipleRemoteRoutes(loaders);
@@ -26,7 +26,7 @@ function App() {
     };
 
     loadRoutes();
-  }, []);
+  }, []); // remoteApps is a constant, safe to omit from dependencies
 
   return (
     <BrowserRouter>

@@ -43,8 +43,9 @@ export const remoteApps: RemoteAppEntry[] = [
   {
     name: 'todoApp',
     // Try to load routes from the remote app first
-    routeLoader: () => import('todoApp/routes').catch(() => {
+    routeLoader: () => import('todoApp/routes').catch((error) => {
       // If routes export doesn't exist, use fallback
+      console.info('todoApp does not export routes, using fallback configuration', error.message);
       return import('./todoAppRoutes').then(m => ({ default: m.default }));
     }),
     enabled: true,
@@ -52,8 +53,9 @@ export const remoteApps: RemoteAppEntry[] = [
   {
     name: 'despensa_inteligente',
     // Try to load routes from the remote app first
-    routeLoader: () => import('despensa_inteligente/routes').catch(() => {
+    routeLoader: () => import('despensa_inteligente/routes').catch((error) => {
       // If routes export doesn't exist, use fallback
+      console.info('despensa_inteligente does not export routes, using fallback configuration', error.message);
       return import('./despensaAppRoutes').then(m => ({ default: m.default }));
     }),
     enabled: true,

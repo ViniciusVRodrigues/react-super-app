@@ -20,7 +20,7 @@ const EDespensaRemote = createRemoteComponent(
 // Component wrapper for the eDespensa page
 const EDespensaPage = () => {
   return (
-    <div className="todo-list-page">
+    <div className="edespensa-page">
       <RemoteWrapper 
         remoteComponent={EDespensaRemote} 
         errorFallback={

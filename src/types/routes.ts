@@ -30,18 +30,3 @@ export interface RouteConfig {
    */
   showInNav?: boolean;
 }
-
-/**
- * Interface for a remote app configuration that exports routes
- */
-export interface RemoteAppConfig {
-  /**
-   * Name of the remote app (must match the name in vite.config.ts remotes)
-   */
-  name: string;
-  
-  /**
-   * Routes exported by this remote app
-   */
-  routes: RouteConfig[];
-}
