@@ -38,9 +38,9 @@ jobs:
         run: npm ci
       
       - name: Build
-        run: npm run build
+        run: npm run build:production
         env:
-          # Environment variables are loaded from .env.production automatically
+          # Build in production mode to load .env.production
           NODE_ENV: production
       
       - name: Setup Pages

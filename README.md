@@ -382,6 +382,31 @@ export default defineConfig({
 
 Agora quando o Super App importar este módulo remoto, as rotas serão automaticamente adicionadas!
 
+## 🔧 Troubleshooting
+
+### Módulos remotos não carregam no GitHub Pages
+
+Se após o deploy os módulos remotos não estiverem carregando:
+
+1. **Verifique o console do navegador** - procure por mensagens de erro detalhadas com diagnósticos
+2. **Certifique-se que `.env.production` tem as URLs corretas** dos módulos remotos
+3. **Confirme que o build está usando modo production** - o workflow deve executar `npm run build:production`
+4. **Use as ferramentas de diagnóstico** disponíveis no console do navegador:
+   ```javascript
+   __remoteDiagnostics.diagnoseAllRemotes({ ... })
+   ```
+
+### Guias de Troubleshooting
+
+- **[TROUBLESHOOTING_REMOTES.md](./TROUBLESHOOTING_REMOTES.md)** - Guia completo de diagnóstico e solução de problemas
+- **[FIX_SUMMARY.md](./FIX_SUMMARY.md)** - Explicação técnica de problemas comuns e suas soluções
+- **[VERIFICATION.md](./VERIFICATION.md)** - Como verificar se o deploy funcionou corretamente
+
+### Ferramentas Úteis
+
+- `scripts/test-remote-urls.sh` - Script para testar URLs de remote entry antes do deploy
+- Diagnostic utilities no console do navegador para testar conectividade em tempo real
+
 ## 🎯 Boas Práticas
 
 1. **Use o Atomic Design** para organizar componentes de forma escalável
