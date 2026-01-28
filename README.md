@@ -62,6 +62,8 @@ O Super App foi projetado para ser resiliente. Se qualquer módulo remoto falhar
 
 ## 🚀 Como Executar
 
+### Desenvolvimento Local
+
 ```bash
 # Instalar dependências
 npm install
@@ -75,6 +77,25 @@ npm run build
 # Preview da build de produção
 npm run preview
 ```
+
+### 🌐 Deploy para GitHub Pages
+
+Para fazer o deploy do Super App no GitHub Pages, siga o [Guia de Deploy](./DEPLOYMENT.md) completo.
+
+**Resumo rápido:**
+
+1. Configure as variáveis de ambiente em `.env.production`
+2. Habilite GitHub Pages no repositório (Settings > Pages > Source: GitHub Actions)
+3. Faça push para a branch `main` - o deploy será automático
+
+```bash
+# Build para produção (GitHub Pages)
+npm run build:production
+
+# O workflow do GitHub Actions fará o deploy automaticamente
+```
+
+Veja [DEPLOYMENT.md](./DEPLOYMENT.md) para instruções completas e configuração dos aplicativos remotos.
 
 ## 📦 Adicionando Módulos Remotos
 
