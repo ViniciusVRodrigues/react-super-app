@@ -10,12 +10,14 @@ interface NavItem {
 interface NavbarProps {
   brand?: string;
   navItems: NavItem[];
+  isLoadingRoutes?: boolean;
 }
 
 /**
  * Navbar - A navigation bar organism combining brand and navigation links
+ * Now supports a loading state while routes are being fetched
  */
-const Navbar = ({ brand = '🚀 Super App', navItems }: NavbarProps) => {
+const Navbar = ({ brand = '🚀 Super App', navItems, isLoadingRoutes = false }: NavbarProps) => {
   const location = useLocation();
 
   return (
@@ -32,6 +34,11 @@ const Navbar = ({ brand = '🚀 Super App', navItems }: NavbarProps) => {
             isActive={location.pathname === item.to} 
           />
         ))}
+        {isLoadingRoutes && (
+          <li className="nav-loading">
+            <span>Carregando rotas...</span>
+          </li>
+        )}
       </ul>
     </nav>
   );

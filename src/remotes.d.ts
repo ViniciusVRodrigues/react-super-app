@@ -10,5 +10,22 @@ declare module 'despensa_inteligente/App' {
   export default App;
 }
 
+// Route declarations for dynamic route loading
+declare module 'todoApp/routes' {
+  import { RouteConfig } from './types/routes';
+  const routes: RouteConfig[];
+  export default routes;
+}
+
+declare module 'despensa_inteligente/routes' {
+  import { RouteConfig } from './types/routes';
+  const routes: RouteConfig[];
+  export default routes;
+}
+
 // Add more remote module declarations as needed
-// declare module 'todoApp/OtherComponent' { ... }
+// declare module 'remoteApp/routes' {
+//   import { RouteConfig } from './types/routes';
+//   const routes: RouteConfig[];
+//   export default routes;
+// }
