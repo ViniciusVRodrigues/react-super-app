@@ -39,6 +39,12 @@ const Home = () => {
           integrar diversas micro-frontends de outros repositórios em uma única experiência
           unificada.
         </p>
+        <p className="highlight-text">
+          ✨ <strong>Novidade:</strong> Agora com <strong>carregamento dinâmico de rotas</strong>! 
+          Os aplicativos remotos exportam suas próprias rotas e botões de navegação, 
+          que são automaticamente adicionados ao Super App. Não é mais necessário configurar 
+          manualmente as rotas em App.tsx ou itens de navegação em MainTemplate.tsx!
+        </p>
       </section>
 
       <section className="home-section">
@@ -60,7 +66,9 @@ const Home = () => {
 
       <section className="home-section documentation">
         <h2>📚 Como adicionar um novo módulo remoto</h2>
-        <p>Siga estes passos para integrar uma nova aplicação:</p>
+        <p>Com o novo sistema de carregamento dinâmico, adicionar módulos é muito mais simples!</p>
+        
+        <h3>🎯 Modo Recomendado: Carregamento Dinâmico</h3>
         <ol>
           <li>
             <strong>Configure o módulo remoto no <code>vite.config.ts</code>:</strong>
@@ -73,44 +81,51 @@ const Home = () => {
 })`} />
           </li>
           <li>
-            <strong>Declare os tipos em <code>src/remotes.d.ts</code>:</strong>
-            <CodeBlock code={`declare module 'novaApp/Component' {
-  import { ComponentType } from 'react';
-  const Component: ComponentType<Record<string, unknown>>;
-  export default Component;
+            <strong>Declare os tipos de rotas em <code>src/remotes.d.ts</code>:</strong>
+            <CodeBlock code={`declare module 'novaApp/routes' {
+  import { RouteConfig } from './types/routes';
+  const routes: RouteConfig[];
+  export default routes;
 }`} />
           </li>
           <li>
-            <strong>Crie uma nova página em <code>src/pages/</code>:</strong>
-            <CodeBlock code={`import { RemoteWrapper } from '../components';
-import { createRemoteComponent } from '../utils/createRemoteComponent';
-
-const RemoteApp = createRemoteComponent(
-  () => import('novaApp/Component')
-);
-
-const NovaAppPage = () => (
-  <div>
-    <h1>Nova App</h1>
-    <RemoteWrapper remoteComponent={RemoteApp} />
-  </div>
-);
-
-export default NovaAppPage;`} />
-          </li>
-          <li>
-            <strong>Adicione a rota no <code>App.tsx</code>:</strong>
-            <CodeBlock code={`<Route path="/nova-app" element={<NovaAppPage />} />`} />
-          </li>
-          <li>
-            <strong>Atualize a navegação em <code>src/components/templates/MainTemplate.tsx</code>:</strong>
-            <CodeBlock code={`const defaultNavItems = [
-  { to: '/', label: 'Home' },
-  { to: '/nova-app', label: 'Nova App' },
-  // ... outros itens
+            <strong>Adicione em <code>src/config/remoteApps.ts</code>:</strong>
+            <CodeBlock code={`export const remoteApps: RemoteAppEntry[] = [
+  {
+    name: 'novaApp',
+    routeLoader: () => import('novaApp/routes'),
+    enabled: true,
+  },
+  // ... outros apps
 ];`} />
           </li>
         </ol>
+        <p className="info-text">
+          ✨ <strong>Pronto!</strong> As rotas e botões de navegação serão automaticamente adicionados.
+        </p>
+
+        <h3>📝 No Aplicativo Remoto</h3>
+        <p>O aplicativo remoto deve exportar suas rotas:</p>
+        <CodeBlock code={`// src/routes.ts no app remoto
+import App from './App';
+
+const routes = [
+  {
+    path: '/nova-app',
+    label: 'Nova App',
+    icon: '🚀',
+    component: App,
+    showInNav: true,
+  },
+];
+
+export default routes;
+
+// vite.config.ts
+exposes: {
+  './App': './src/App.tsx',
+  './routes': './src/routes.ts', // Exponha as rotas!
+}`} />
       </section>
 
       <section className="home-section">

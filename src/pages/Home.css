@@ -84,7 +84,17 @@
   margin-bottom: 1.5rem;
 }
 
-.info-text code {
+.highlight-text {
+  background: rgba(76, 175, 80, 0.1);
+  border-left: 4px solid #4caf50;
+  padding: 1rem;
+  border-radius: 0 8px 8px 0;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.info-text code,
+.highlight-text code {
   background: rgba(255, 255, 255, 0.1);
   padding: 0.2rem 0.5rem;
   border-radius: 4px;

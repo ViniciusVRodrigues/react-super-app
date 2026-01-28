@@ -6,10 +6,29 @@ Um aplicativo host (shell) que utiliza **Module Federation** para integrar múlt
 
 - **React 19** com **TypeScript** e **Vite**
 - **Module Federation** para carregamento de módulos remotos
+- **Carregamento Dinâmico de Rotas** - rotas e navegação adicionadas automaticamente a partir dos módulos remotos
 - **Atomic Design** para organização de componentes
 - **Error Boundaries** para resiliência - o Super App nunca para, mesmo se um módulo remoto falhar
 - **Lazy Loading** para carregamento sob demanda
 - **React Router** para navegação entre módulos
+
+## 🎯 Novidade: Carregamento Dinâmico de Rotas
+
+Agora o Super App suporta **carregamento dinâmico de rotas e navegação** dos aplicativos remotos!
+
+### Como Funciona
+
+1. **Aplicativos remotos exportam suas rotas** através do Module Federation
+2. **Super App importa as rotas automaticamente** ao iniciar
+3. **Rotas e botões de navegação são criados dinamicamente** sem necessidade de configuração manual no App.tsx ou MainTemplate.tsx
+
+### Benefícios
+
+- ✅ **Menos código manual** - não precisa editar App.tsx e MainTemplate.tsx para cada novo módulo
+- ✅ **Maior autonomia** - cada aplicativo remoto controla suas próprias rotas
+- ✅ **Facilidade de manutenção** - mudanças em rotas ocorrem apenas no aplicativo remoto
+- ✅ **Fallback automático** - se o módulo remoto não exportar rotas, usa configuração local
+- ✅ **Type-safe** - totalmente tipado com TypeScript
 
 ## 🏗️ Arquitetura Atomic Design
 
@@ -59,20 +78,102 @@ npm run preview
 
 ## 📦 Adicionando Módulos Remotos
 
-### 1. Configurar o módulo remoto no `vite.config.ts`
+### Modo 1: Carregamento Dinâmico de Rotas (Recomendado)
+
+Com o novo sistema de carregamento dinâmico, o módulo remoto pode exportar suas próprias rotas, que serão automaticamente adicionadas ao Super App.
+
+#### No Aplicativo Remoto
+
+**1. Crie um arquivo de rotas (`src/routes.ts` ou `src/routes.tsx`)**
+
+```typescript
+import { RouteConfig } from '@types/routes'; // Ou defina localmente
+import TodoApp from './App';
+
+const routes: RouteConfig[] = [
+  {
+    path: '/todo',
+    label: 'Todo List',
+    icon: '✅',
+    component: TodoApp,
+    showInNav: true, // Aparecerá no menu de navegação
+  },
+];
+
+export default routes;
+```
+
+**2. Exponha as rotas no `vite.config.ts` do aplicativo remoto**
+
+```typescript
+federation({
+  name: 'todoApp',
+  filename: 'remoteEntry.js',
+  exposes: {
+    './App': './src/App.tsx',
+    './routes': './src/routes.ts', // Exponha as rotas
+  },
+  shared: ['react', 'react-dom', 'react-router-dom'],
+})
+```
+
+#### No Super App
+
+**1. Configure o módulo remoto no `vite.config.ts`**
+
+```typescript
+federation({
+  name: 'superApp',
+  remotes: {
+    todoApp: 'http://localhost:3001/assets/remoteEntry.js',
+  },
+  shared: ['react', 'react-dom', 'react-router-dom'],
+})
+```
+
+**2. Declare os tipos em `src/remotes.d.ts`**
+
+```typescript
+declare module 'todoApp/routes' {
+  import { RouteConfig } from './types/routes';
+  const routes: RouteConfig[];
+  export default routes;
+}
+```
+
+**3. Adicione o aplicativo remoto em `src/config/remoteApps.ts`**
+
+```typescript
+export const remoteApps: RemoteAppEntry[] = [
+  {
+    name: 'todoApp',
+    routeLoader: () => import('todoApp/routes'),
+    enabled: true,
+  },
+];
+```
+
+**Pronto!** As rotas e botões de navegação serão automaticamente adicionados ao Super App. 🎉
+
+---
+
+### Modo 2: Configuração Manual (Legado)
+
+Se o aplicativo remoto ainda não exporta rotas, você pode configurar manualmente:
+
+**1. Configurar o módulo remoto no `vite.config.ts`**
 
 ```typescript
 federation({
   name: 'superApp',
   remotes: {
     remoteApp: 'http://localhost:3001/assets/remoteEntry.js',
-    anotherApp: 'http://localhost:3002/assets/remoteEntry.js',
   },
   shared: ['react', 'react-dom', 'react-router-dom'],
-}),
+})
 ```
 
-### 2. Declarar os tipos em `src/remotes.d.ts`
+**2. Declarar os tipos em `src/remotes.d.ts`**
 
 ```typescript
 declare module 'remoteApp/Component' {
@@ -82,19 +183,22 @@ declare module 'remoteApp/Component' {
 }
 ```
 
-### 3. Criar uma página em `src/pages/`
+**3. Criar uma configuração de rotas em `src/config/`**
 
 ```tsx
+// src/config/remoteAppRoutes.tsx
+import type { RouteConfig } from '../types/routes';
 import { RemoteWrapper, ErrorMessage } from '../components';
 import { createRemoteComponent } from '../utils/createRemoteComponent';
 
-const RemoteApp = createRemoteComponent(() => import('remoteApp/Component'));
+const RemoteAppComponent = createRemoteComponent(
+  () => import('remoteApp/Component')
+);
 
-const MeuModuloPage = () => (
+const RemoteAppPage = () => (
   <div>
-    <h1>Meu Módulo</h1>
     <RemoteWrapper 
-      remoteComponent={RemoteApp}
+      remoteComponent={RemoteAppComponent}
       errorFallback={
         <ErrorMessage 
           title="Módulo não disponível"
@@ -105,27 +209,31 @@ const MeuModuloPage = () => (
   </div>
 );
 
-export default MeuModuloPage;
+export const remoteAppRoutes: RouteConfig[] = [
+  {
+    path: '/remote-app',
+    label: 'Remote App',
+    icon: '🚀',
+    component: RemoteAppPage,
+    showInNav: true,
+  },
+];
+
+export default remoteAppRoutes;
 ```
 
-### 4. Adicionar a rota no `App.tsx`
-
-```tsx
-import MeuModuloPage from './pages/MeuModuloPage';
-
-// Na configuração de rotas
-<Route path="/meu-modulo" element={<MeuModuloPage />} />
-```
-
-### 5. Atualizar a navegação
-
-Edite o arquivo `src/components/templates/MainTemplate.tsx` para adicionar o novo item na navegação:
+**4. Adicionar em `src/config/remoteApps.ts` com fallback**
 
 ```typescript
-const defaultNavItems: NavItem[] = [
-  { to: '/', label: 'Home' },
-  { to: '/meu-modulo', label: 'Meu Módulo' },
-  // ... outros itens
+export const remoteApps: RemoteAppEntry[] = [
+  {
+    name: 'remoteApp',
+    routeLoader: () => import('remoteApp/routes').catch(() => {
+      // Fallback se o app não exportar rotas
+      return import('./remoteAppRoutes').then(m => ({ default: m.default }));
+    }),
+    enabled: true,
+  },
 ];
 ```
 
@@ -156,13 +264,19 @@ src/
 │   │   └── index.ts
 │   ├── ErrorBoundary.tsx   # Captura erros de módulos remotos
 │   └── index.ts            # Exports centralizados
+├── config/                 # Configurações do Super App
+│   ├── remoteApps.ts       # Lista de aplicativos remotos
+│   ├── todoAppRoutes.tsx   # Rotas de fallback para todoApp
+│   └── despensaAppRoutes.tsx # Rotas de fallback para despensa
 ├── pages/
 │   ├── Home.tsx            # Página inicial com documentação
-│   ├── ExampleRemotePage.tsx # Exemplo de página com módulo remoto
-│   └── TodoList.tsx        # Exemplo de integração real
+│   └── ExampleRemotePage.tsx # Exemplo de página com módulo remoto
+├── types/
+│   └── routes.ts           # Tipos TypeScript para rotas
 ├── utils/
-│   └── createRemoteComponent.ts
-├── App.tsx                 # Configuração de rotas
+│   ├── createRemoteComponent.ts # Factory para componentes lazy
+│   └── loadRemoteRoutes.ts # Utilitário para carregar rotas remotas
+├── App.tsx                 # Configuração dinâmica de rotas
 ├── App.css
 ├── main.tsx
 └── index.css
@@ -170,9 +284,37 @@ src/
 
 ## 📚 Configurando um Módulo Remoto (Remote App)
 
-Para que uma aplicação seja consumida pelo Super App, ela precisa expor seus componentes via Module Federation.
+Para que uma aplicação seja consumida pelo Super App, ela precisa expor seus componentes e, opcionalmente, suas rotas via Module Federation.
 
-### Exemplo de configuração do módulo remoto (`vite.config.ts`):
+### Exemplo completo de configuração do módulo remoto:
+
+**1. Crie um arquivo de rotas (`src/routes.ts`):**
+
+```typescript
+export interface RouteConfig {
+  path: string;
+  label: string;
+  icon?: string;
+  component: ComponentType<any>;
+  showInNav?: boolean;
+}
+
+import App from './App';
+
+const routes: RouteConfig[] = [
+  {
+    path: '/todo',
+    label: 'Todo List',
+    icon: '✅',
+    component: App,
+    showInNav: true,
+  },
+];
+
+export default routes;
+```
+
+**2. Configure o `vite.config.ts` do módulo remoto:**
 
 ```typescript
 import { defineConfig } from 'vite'
@@ -183,11 +325,11 @@ export default defineConfig({
   plugins: [
     react(),
     federation({
-      name: 'remoteApp',
+      name: 'todoApp',
       filename: 'remoteEntry.js',
       exposes: {
-        './MeuComponente': './src/components/MeuComponente.tsx',
-        './OutroComponente': './src/pages/OutraPagina.tsx',
+        './App': './src/App.tsx',
+        './routes': './src/routes.ts',  // Exponha as rotas!
       },
       shared: ['react', 'react-dom', 'react-router-dom'],
     }),
@@ -201,6 +343,8 @@ export default defineConfig({
 })
 ```
 
+Agora quando o Super App importar este módulo remoto, as rotas serão automaticamente adicionadas!
+
 ## 🎯 Boas Práticas
 
 1. **Use o Atomic Design** para organizar componentes de forma escalável
@@ -209,6 +353,8 @@ export default defineConfig({
 4. **Compartilhe dependências** (`shared`) para evitar duplicação
 5. **Versione suas APIs** para compatibilidade entre versões
 6. **Importe componentes do index centralizado** (`import { Navbar } from '../components'`)
+7. **Exporte rotas dos módulos remotos** para integração automática no Super App
+8. **Use o sistema de carregamento dinâmico** - evite configuração manual quando possível
 
 ## 📝 Licença
 
