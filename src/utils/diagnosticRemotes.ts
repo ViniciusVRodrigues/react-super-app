@@ -35,7 +35,8 @@ export async function diagnoseRemoteEntry(url: string): Promise<RemoteEntryDiagn
       const text = await response.text();
       result.accessible = true;
       result.fileSize = text.length;
-      result.containsFederation = text.includes('__federation') || text.includes('webpackJsonp');
+      // Check for Module Federation code (Vite uses __federation)
+      result.containsFederation = text.includes('__federation');
       
       if (!result.containsFederation) {
         result.error = 'File does not appear to contain Module Federation code';

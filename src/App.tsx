@@ -24,7 +24,8 @@ function App() {
       console.log('Despensa App URL:', import.meta.env.VITE_DESPENSA_APP_URL);
       console.groupEnd();
 
-      // Run diagnostics on remote entries (only in development or when needed)
+      // Run diagnostics on remote entries (only in development or when explicitly enabled)
+      // Note: This runs once per app session and is disabled by default in production
       if (import.meta.env.DEV || import.meta.env.VITE_RUN_DIAGNOSTICS === 'true') {
         const remoteUrls: Record<string, string> = {};
         if (import.meta.env.VITE_TODO_APP_URL) {
@@ -35,6 +36,7 @@ function App() {
         }
         
         if (Object.keys(remoteUrls).length > 0) {
+          // Diagnostics run once on mount - won't repeat on re-renders
           await diagnoseAllRemotes(remoteUrls);
         }
       }
