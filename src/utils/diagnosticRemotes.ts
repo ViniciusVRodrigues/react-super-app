@@ -159,7 +159,16 @@ export async function findWorkingRemoteEntry(baseUrl: string): Promise<string | 
 
 // Export for use in browser console
 if (typeof window !== 'undefined') {
-  (window as any).__remoteDiagnostics = {
+  interface WindowWithDiagnostics extends Window {
+    __remoteDiagnostics?: {
+      diagnoseRemoteEntry: typeof diagnoseRemoteEntry;
+      diagnoseAllRemotes: typeof diagnoseAllRemotes;
+      suggestRemoteEntryUrls: typeof suggestRemoteEntryUrls;
+      findWorkingRemoteEntry: typeof findWorkingRemoteEntry;
+    };
+  }
+  
+  (window as WindowWithDiagnostics).__remoteDiagnostics = {
     diagnoseRemoteEntry,
     diagnoseAllRemotes,
     suggestRemoteEntryUrls,
