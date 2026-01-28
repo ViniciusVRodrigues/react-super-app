@@ -1,10 +1,10 @@
 // Type declarations for remote modules exposed via Module Federation
 
 // TodoApp components
-declare module 'todoApp/App' {
+declare module 'todoApp/HomePage' {
   import { ComponentType } from 'react';
-  const App: ComponentType<Record<string, unknown>>;
-  export default App;
+  const HomePage: ComponentType<Record<string, unknown>>;
+  export default HomePage;
 }
 
 // Despensa Inteligente components

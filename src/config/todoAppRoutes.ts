@@ -11,7 +11,7 @@ export const todoAppRoutes: RouteConfig[] = [
     path: '/todo',
     label: 'Todo List',
     icon: '✅',
-    component: 'App', // Name of the exposed component in module federation
+    component: 'HomePage', // Name of the exposed component in module federation
     showInNav: true,
   },
 ];
