@@ -6,63 +6,10 @@ Um aplicativo host (shell) que utiliza **Module Federation** para integrar múlt
 
 - **React 19** com **TypeScript** e **Vite**
 - **Module Federation** para carregamento de módulos remotos
-- **Carregamento Dinâmico de Rotas** - rotas e navegação adicionadas automaticamente a partir dos módulos remotos
-- **Atomic Design** para organização de componentes
-- **Error Boundaries** para resiliência - o Super App nunca para, mesmo se um módulo remoto falhar
+- **Error Boundaries** para resiliência
 - **Lazy Loading** para carregamento sob demanda
-- **React Router** para navegação entre módulos
-
-## 🎯 Novidade: Carregamento Dinâmico de Rotas
-
-Agora o Super App suporta **carregamento dinâmico de rotas e navegação** dos aplicativos remotos!
-
-### Como Funciona
-
-1. **Aplicativos remotos exportam suas rotas** através do Module Federation
-2. **Super App importa as rotas automaticamente** ao iniciar
-3. **Rotas e botões de navegação são criados dinamicamente** sem necessidade de configuração manual no App.tsx ou MainTemplate.tsx
-
-### Benefícios
-
-- ✅ **Menos código manual** - não precisa editar App.tsx e MainTemplate.tsx para cada novo módulo
-- ✅ **Maior autonomia** - cada aplicativo remoto controla suas próprias rotas
-- ✅ **Facilidade de manutenção** - mudanças em rotas ocorrem apenas no aplicativo remoto
-- ✅ **Fallback automático** - se o módulo remoto não exportar rotas, usa configuração local
-- ✅ **Type-safe** - totalmente tipado com TypeScript
-
-## 🏗️ Arquitetura Atomic Design
-
-O projeto segue o padrão **Atomic Design** para organização de componentes, facilitando a manutenção, reutilização e escalabilidade:
-
-```
-src/components/
-├── atoms/          # Componentes básicos (Loading, Icon, ErrorMessage)
-├── molecules/      # Combinações de atoms (NavLink, FeatureCard, AppLink, CodeBlock)
-├── organisms/      # Componentes complexos (Navbar, Footer, FeaturesGrid, RemoteWrapper)
-├── templates/      # Layouts de página (MainTemplate)
-├── ErrorBoundary.tsx
-└── index.ts        # Exports centralizados
-```
-
-### Níveis do Atomic Design
-
-- **Atoms**: Componentes mais básicos e indivisíveis (botões, ícones, spinners)
-- **Molecules**: Combinações simples de atoms que formam unidades funcionais
-- **Organisms**: Componentes complexos que combinam múltiplas molecules e/ou atoms
-- **Templates**: Layouts de página que definem a estrutura geral
-- **Pages**: Instâncias específicas de templates com conteúdo real
-
-## 🛡️ Resiliência
-
-O Super App foi projetado para ser resiliente. Se qualquer módulo remoto falhar ao carregar, o aplicativo principal continua funcionando normalmente. Cada módulo remoto é envolvido em:
-
-1. **Error Boundary** - Captura erros de JavaScript e exibe uma mensagem amigável
-2. **Suspense** - Mostra um loading enquanto o módulo carrega
-3. **RemoteWrapper** - Organismo que combina ambos para fácil uso
 
 ## 🚀 Como Executar
-
-### Desenvolvimento Local
 
 ```bash
 # Instalar dependências
@@ -73,350 +20,59 @@ npm run dev
 
 # Build para produção
 npm run build
-
-# Preview da build de produção
-npm run preview
 ```
 
-### 🌐 Deploy para GitHub Pages
+## 📦 Módulos Remotos Integrados
 
-Para fazer o deploy do Super App no GitHub Pages, siga o [Guia de Deploy](./DEPLOYMENT.md) completo.
+- **TodoApp** - Lista de tarefas (`/todo`)
+- **Despensa Inteligente** - Gestão de despensa (`/despensa`, `/despensa/products`, `/despensa/pantry`, `/despensa/shopping-list`)
 
-**Resumo rápido:**
+## 🔧 Como Adicionar um Módulo Remoto
 
-1. Configure as variáveis de ambiente em `.env.production`
-2. Habilite GitHub Pages no repositório (Settings > Pages > Source: GitHub Actions)
-3. Faça push para a branch `main` - o deploy será automático
-
-```bash
-# Build para produção (GitHub Pages)
-npm run build:production
-
-# O workflow do GitHub Actions fará o deploy automaticamente
-```
-
-Veja [DEPLOYMENT.md](./DEPLOYMENT.md) para instruções completas e configuração dos aplicativos remotos.
-
-## 📦 Adicionando Módulos Remotos
-
-### Modo 1: Carregamento Dinâmico de Rotas (Recomendado)
-
-Com o novo sistema de carregamento dinâmico, o módulo remoto pode exportar suas próprias rotas, que serão automaticamente adicionadas ao Super App.
-
-#### No Aplicativo Remoto
-
-**1. Crie um arquivo de rotas (`src/routes.ts`)**
-
+1. Configure o remote em `vite.config.ts`:
 ```typescript
-export interface RouteConfig {
-  path: string;
-  label: string;
-  icon?: string;
-  component: string; // Nome do componente exposto no module federation
-  showInNav?: boolean;
-}
-
-const routes: RouteConfig[] = [
-  {
-    path: '/todo',
-    label: 'Todo List',
-    icon: '✅',
-    component: 'App', // Nome do componente exposto
-    showInNav: true,
-  },
-];
-
-export default routes;
-```
-
-**Exemplo com múltiplas rotas (como despensa_inteligente):**
-
-```typescript
-const routes: RouteConfig[] = [
-  {
-    path: '/edespensa',
-    label: 'Dashboard',
-    icon: '📊',
-    component: 'Dashboard',
-    showInNav: true,
-  },
-  {
-    path: '/edespensa/products',
-    label: 'Produtos',
-    icon: '📦',
-    component: 'Products',
-    showInNav: true,
-  },
-  {
-    path: '/edespensa/pantry',
-    label: 'Despensa',
-    icon: '🏠',
-    component: 'Pantry',
-    showInNav: true,
-  },
-];
-
-export default routes;
-```
-
-**2. Exponha os componentes e rotas no `vite.config.ts` do aplicativo remoto**
-
-```typescript
-federation({
-  name: 'despensa_inteligente',
-  filename: 'remoteEntry.js',
-  exposes: {
-    // Exponha cada componente individualmente
-    './Dashboard': './src/pages/Dashboard.tsx',
-    './Products': './src/pages/Products.tsx',
-    './Pantry': './src/pages/Pantry.tsx',
-    './routes': './src/routes.ts', // Exponha as rotas
-  },
-  shared: ['react', 'react-dom', 'react-router-dom'],
-})
-```
-
-#### No Super App
-
-**1. Configure o módulo remoto no `vite.config.ts`**
-
-```typescript
-federation({
-  name: 'superApp',
-  remotes: {
-    todoApp: 'http://localhost:3001/assets/remoteEntry.js',
-  },
-  shared: ['react', 'react-dom', 'react-router-dom'],
-})
-```
-
-**2. Declare os tipos em `src/remotes.d.ts`**
-
-```typescript
-declare module 'todoApp/routes' {
-  import { RouteConfig } from './types/routes';
-  const routes: RouteConfig[];
-  export default routes;
+remotes: {
+  meuApp: 'http://localhost:3003/assets/remoteEntry.js',
 }
 ```
 
-**3. Adicione o aplicativo remoto em `src/config/remoteApps.ts`**
-
+2. Declare os tipos em `src/remotes.d.ts`:
 ```typescript
-export const remoteApps: RemoteAppEntry[] = [
-  {
-    name: 'todoApp',
-    routeLoader: () => import('todoApp/routes'),
-    enabled: true,
-  },
-];
-```
-
-**Pronto!** As rotas e botões de navegação serão automaticamente adicionados ao Super App. 🎉
-
----
-
-### Modo 2: Configuração Manual (Legado)
-
-Se o aplicativo remoto ainda não exporta rotas, você pode configurar manualmente:
-
-**1. Configurar o módulo remoto no `vite.config.ts`**
-
-```typescript
-federation({
-  name: 'superApp',
-  remotes: {
-    remoteApp: 'http://localhost:3001/assets/remoteEntry.js',
-  },
-  shared: ['react', 'react-dom', 'react-router-dom'],
-})
-```
-
-**2. Declarar os tipos em `src/remotes.d.ts`**
-
-```typescript
-declare module 'remoteApp/Component' {
+declare module 'meuApp/Component' {
   import { ComponentType } from 'react';
   const Component: ComponentType<Record<string, unknown>>;
   export default Component;
 }
 ```
 
-**3. Criar uma configuração de rotas em `src/config/`**
-
+3. Crie uma página em `src/pages/`:
 ```typescript
-// src/config/remoteAppRoutes.ts
-import type { RouteConfig } from '../types/routes';
+import { RemoteWrapper } from '../components';
+import { createRemoteComponent } from '../utils/createRemoteComponent';
 
-export const remoteAppRoutes: RouteConfig[] = [
-  {
-    path: '/remote-app',
-    label: 'Remote App',
-    icon: '🚀',
-    component: 'App', // Nome do componente exposto
-    showInNav: true,
-  },
-];
+const MeuComponent = createRemoteComponent(
+  () => import('meuApp/Component')
+);
 
-export default remoteAppRoutes;
+const MeuAppPage = () => (
+  <div className="remote-page">
+    <h1>Meu App</h1>
+    <RemoteWrapper remoteComponent={MeuComponent} />
+  </div>
+);
+
+export default MeuAppPage;
 ```
 
-**4. Adicionar em `src/config/remoteApps.ts` com fallback**
-
+4. Adicione a rota em `App.tsx`:
 ```typescript
-export const remoteApps: RemoteAppEntry[] = [
-  {
-    name: 'remoteApp',
-    routeLoader: () => import('remoteApp/routes').catch(() => {
-      // Fallback se o app não exportar rotas
-      return import('./remoteAppRoutes').then(m => ({ default: m.default }));
-    }),
-    enabled: true,
-  },
-];
+<Route path="/meu-app" element={<MeuAppPage />} />
 ```
 
-## 🔧 Estrutura do Projeto
-
-```
-src/
-├── components/
-│   ├── atoms/              # Componentes básicos
-│   │   ├── Loading.tsx
-│   │   ├── Icon.tsx
-│   │   ├── ErrorMessage.tsx
-│   │   └── index.ts
-│   ├── molecules/          # Combinações de atoms
-│   │   ├── NavLink.tsx
-│   │   ├── FeatureCard.tsx
-│   │   ├── AppLink.tsx
-│   │   ├── CodeBlock.tsx
-│   │   └── index.ts
-│   ├── organisms/          # Componentes complexos
-│   │   ├── Navbar.tsx
-│   │   ├── Footer.tsx
-│   │   ├── FeaturesGrid.tsx
-│   │   ├── RemoteWrapper.tsx
-│   │   └── index.ts
-│   ├── templates/          # Layouts de página
-│   │   ├── MainTemplate.tsx
-│   │   └── index.ts
-│   ├── ErrorBoundary.tsx   # Captura erros de módulos remotos
-│   └── index.ts            # Exports centralizados
-├── config/                 # Configurações do Super App
-│   ├── remoteApps.ts       # Lista de aplicativos remotos
-│   ├── todoAppRoutes.ts    # Rotas de fallback para todoApp
-│   └── despensaAppRoutes.ts # Rotas de fallback para despensa
-├── pages/
-│   ├── Home.tsx            # Página inicial com documentação
-│   └── ExampleRemotePage.tsx # Exemplo de página com módulo remoto
-├── types/
-│   └── routes.ts           # Tipos TypeScript para rotas
-├── utils/
-│   ├── createRemoteComponent.ts # Factory para componentes lazy
-│   └── loadRemoteRoutes.ts # Utilitário para carregar rotas remotas
-├── App.tsx                 # Configuração dinâmica de rotas
-├── App.css
-├── main.tsx
-└── index.css
-```
-
-## 📚 Configurando um Módulo Remoto (Remote App)
-
-Para que uma aplicação seja consumida pelo Super App, ela precisa expor seus componentes e, opcionalmente, suas rotas via Module Federation.
-
-### Exemplo completo de configuração do módulo remoto:
-
-**1. Crie um arquivo de rotas (`src/routes.ts`):**
-
+5. Adicione ao menu em `MainTemplate.tsx`:
 ```typescript
-export interface RouteConfig {
-  path: string;
-  label: string;
-  icon?: string;
-  component: string; // Nome do componente exposto no module federation
-  showInNav?: boolean;
-}
-
-const routes: RouteConfig[] = [
-  {
-    path: '/todo',
-    label: 'Todo List',
-    icon: '✅',
-    component: 'App', // Nome do componente exposto
-    showInNav: true,
-  },
-];
-
-export default routes;
+{ to: '/meu-app', label: '🚀 Meu App' },
 ```
-
-**2. Configure o `vite.config.ts` do módulo remoto:**
-
-```typescript
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import federation from '@originjs/vite-plugin-federation'
-
-export default defineConfig({
-  plugins: [
-    react(),
-    federation({
-      name: 'todoApp',
-      filename: 'remoteEntry.js',
-      exposes: {
-        './App': './src/App.tsx',
-        './routes': './src/routes.ts',  // Exponha as rotas!
-      },
-      shared: ['react', 'react-dom', 'react-router-dom'],
-    }),
-  ],
-  build: {
-    modulePreload: false,
-    target: 'esnext',
-    minify: false,
-    cssCodeSplit: false,
-  },
-})
-```
-
-Agora quando o Super App importar este módulo remoto, as rotas serão automaticamente adicionadas!
-
-## 🔧 Troubleshooting
-
-### Módulos remotos não carregam no GitHub Pages
-
-Se após o deploy os módulos remotos não estiverem carregando:
-
-1. **Verifique o console do navegador** - procure por mensagens de erro detalhadas com diagnósticos
-2. **Certifique-se que `.env.production` tem as URLs corretas** dos módulos remotos
-3. **Confirme que o build está usando modo production** - o workflow deve executar `npm run build:production`
-4. **Use as ferramentas de diagnóstico** disponíveis no console do navegador:
-   ```javascript
-   __remoteDiagnostics.diagnoseAllRemotes({ ... })
-   ```
-
-### Guias de Troubleshooting
-
-- **[TROUBLESHOOTING_REMOTES.md](./TROUBLESHOOTING_REMOTES.md)** - Guia completo de diagnóstico e solução de problemas
-- **[FIX_SUMMARY.md](./FIX_SUMMARY.md)** - Explicação técnica de problemas comuns e suas soluções
-- **[VERIFICATION.md](./VERIFICATION.md)** - Como verificar se o deploy funcionou corretamente
-
-### Ferramentas Úteis
-
-- `scripts/test-remote-urls.sh` - Script para testar URLs de remote entry antes do deploy
-- Diagnostic utilities no console do navegador para testar conectividade em tempo real
-
-## 🎯 Boas Práticas
-
-1. **Use o Atomic Design** para organizar componentes de forma escalável
-2. **Sempre use o RemoteWrapper** para carregar módulos remotos
-3. **Defina fallbacks personalizados** para melhor experiência do usuário
-4. **Compartilhe dependências** (`shared`) para evitar duplicação
-5. **Versione suas APIs** para compatibilidade entre versões
-6. **Importe componentes do index centralizado** (`import { Navbar } from '../components'`)
-7. **Exporte rotas dos módulos remotos** para integração automática no Super App
-8. **Use o sistema de carregamento dinâmico** - evite configuração manual quando possível
 
 ## 📝 Licença
 

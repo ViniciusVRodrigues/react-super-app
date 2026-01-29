@@ -39,12 +39,6 @@ const Home = () => {
           integrar diversas micro-frontends de outros repositórios em uma única experiência
           unificada.
         </p>
-        <p className="highlight-text">
-          ✨ <strong>Novidade:</strong> Agora com <strong>carregamento dinâmico de rotas</strong>! 
-          Os aplicativos remotos exportam suas próprias rotas e botões de navegação, 
-          que são automaticamente adicionados ao Super App. Não é mais necessário configurar 
-          manualmente as rotas em App.tsx ou itens de navegação em MainTemplate.tsx!
-        </p>
       </section>
 
       <section className="home-section">
@@ -60,86 +54,55 @@ const Home = () => {
         </p>
         <div className="apps-list">
           <AppLink to="/example" icon="📦" name="Exemplo de Módulo Remoto" />
-          <AppLink to="/todo" icon="✅" name="Todo List (Remote App)" />
+          <AppLink to="/todo" icon="✅" name="Todo List" />
+          <AppLink to="/despensa" icon="📊" name="Despensa Inteligente" />
         </div>
       </section>
 
       <section className="home-section documentation">
         <h2>📚 Como adicionar um novo módulo remoto</h2>
-        <p>Com o novo sistema de carregamento dinâmico, adicionar módulos é muito mais simples!</p>
         
-        <h3>🎯 Modo Recomendado: Carregamento Dinâmico</h3>
         <ol>
           <li>
             <strong>Configure o módulo remoto no <code>vite.config.ts</code>:</strong>
             <CodeBlock code={`federation({
   name: 'superApp',
   remotes: {
-    novaApp: 'http://localhost:3002/assets/remoteEntry.js',
+    meuApp: 'http://localhost:3003/assets/remoteEntry.js',
   },
   shared: ['react', 'react-dom', 'react-router-dom'],
 })`} />
           </li>
           <li>
-            <strong>Declare os tipos de rotas em <code>src/remotes.d.ts</code>:</strong>
-            <CodeBlock code={`declare module 'novaApp/routes' {
-  import { RouteConfig } from './types/routes';
-  const routes: RouteConfig[];
-  export default routes;
+            <strong>Declare os tipos em <code>src/remotes.d.ts</code>:</strong>
+            <CodeBlock code={`declare module 'meuApp/Component' {
+  import { ComponentType } from 'react';
+  const Component: ComponentType<Record<string, unknown>>;
+  export default Component;
 }`} />
           </li>
           <li>
-            <strong>Adicione em <code>src/config/remoteApps.ts</code>:</strong>
-            <CodeBlock code={`export const remoteApps: RemoteAppEntry[] = [
-  {
-    name: 'novaApp',
-    routeLoader: () => import('novaApp/routes'),
-    enabled: true,
-  },
-  // ... outros apps
-];`} />
+            <strong>Crie uma página em <code>src/pages/</code>:</strong>
+            <CodeBlock code={`import { RemoteWrapper } from '../components';
+import { createRemoteComponent } from '../utils/createRemoteComponent';
+
+const MeuComponent = createRemoteComponent(
+  () => import('meuApp/Component')
+);
+
+const MeuAppPage = () => (
+  <div className="remote-page">
+    <h1>Meu App</h1>
+    <RemoteWrapper remoteComponent={MeuComponent} />
+  </div>
+);
+
+export default MeuAppPage;`} />
+          </li>
+          <li>
+            <strong>Adicione a rota em <code>App.tsx</code> e o link no <code>MainTemplate.tsx</code></strong>
           </li>
         </ol>
-        <p className="info-text">
-          ✨ <strong>Pronto!</strong> As rotas e botões de navegação serão automaticamente adicionados.
-        </p>
-
-        <h3>📝 No Aplicativo Remoto</h3>
-        <p>O aplicativo remoto deve exportar suas rotas:</p>
-        <CodeBlock code={`// src/routes.ts no app remoto
-const routes = [
-  {
-    path: '/nova-app',
-    label: 'Nova App',
-    icon: '🚀',
-    component: 'App', // Nome do componente exposto
-    showInNav: true,
-  },
-];
-
-export default routes;
-
-// vite.config.ts
-exposes: {
-  './App': './src/App.tsx',
-  './routes': './src/routes.ts', // Exponha as rotas!
-}`} />
-      </section>
-
-      <section className="home-section">
-        <h2>🏗️ Arquitetura Atomic Design</h2>
-        <p>
-          Este projeto segue o padrão <strong>Atomic Design</strong> para organização de componentes,
-          facilitando a manutenção, reutilização e escalabilidade.
-        </p>
-        <div className="atomic-structure">
-          <CodeBlock code={`src/components/
-├── atoms/          # Componentes básicos (Loading, Icon, ErrorMessage)
-├── molecules/      # Combinações de atoms (NavLink, FeatureCard, AppLink)
-├── organisms/      # Componentes complexos (Navbar, Footer, RemoteWrapper)
-├── templates/      # Layouts de página (MainTemplate)
-└── index.ts        # Exports centralizados`} />
-        </div>
       </section>
     </div>
   );
