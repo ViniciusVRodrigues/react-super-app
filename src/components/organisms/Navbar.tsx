@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { NavLink, ThemeToggle } from '../molecules';
+import { NavLink } from '../molecules';
 import './Navbar.css';
 
 interface NavItem {
