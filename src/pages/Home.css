@@ -30,13 +30,13 @@
 .home-section h2 {
   font-size: 1.75rem;
   margin-bottom: 1rem;
-  color: #fff;
+  color: #213547;
 }
 
 .home-section p {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: #ccc;
+  color: #555;
 }
 
 .features-grid {
@@ -47,16 +47,16 @@
 }
 
 .feature-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.03);
   border-radius: 12px;
   padding: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .feature-icon {
@@ -68,12 +68,12 @@
 .feature-card h3 {
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
-  color: #fff;
+  color: #213547;
 }
 
 .feature-card p {
   font-size: 0.95rem;
-  color: #aaa;
+  color: #666;
 }
 
 .info-text {
@@ -112,15 +112,15 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.03);
   border-radius: 8px;
   text-decoration: none;
-  color: #fff;
+  color: #213547;
   transition: background 0.3s ease;
 }
 
 .app-link:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .app-icon {
@@ -132,7 +132,7 @@
 }
 
 .documentation {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.02);
   border-radius: 12px;
   padding: 2rem;
 }
@@ -145,7 +145,7 @@
 }
 
 .documentation li {
-  color: #ccc;
+  color: #555;
   margin-bottom: 1.5rem;
   counter-increment: item;
   position: relative;
@@ -171,7 +171,7 @@
 .documentation li strong {
   display: block;
   margin-bottom: 0.5rem;
-  color: #fff;
+  color: #213547;
 }
 
 .documentation code {
@@ -192,13 +192,13 @@
   align-items: center;
   justify-content: center;
   min-height: 200px;
-  color: #888;
+  color: #666;
 }
 
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid rgba(255, 255, 255, 0.1);
+  border: 4px solid rgba(0, 0, 0, 0.1);
   border-top: 4px solid #646cff;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -215,9 +215,9 @@
 .error-container {
   text-align: center;
   padding: 3rem;
-  background: rgba(255, 0, 0, 0.1);
+  background: rgba(255, 0, 0, 0.05);
   border-radius: 12px;
-  border: 1px solid rgba(255, 0, 0, 0.3);
+  border: 1px solid rgba(255, 0, 0, 0.2);
 }
 
 .error-container h2 {
@@ -226,58 +226,87 @@
 }
 
 .error-container p {
-  color: #ccc;
+  color: #555;
   margin-bottom: 0.5rem;
 }
 
 .error-details {
   font-family: 'Fira Code', monospace;
   font-size: 0.9rem;
-  color: #888;
-  background: rgba(0, 0, 0, 0.3);
+  color: #666;
+  background: rgba(0, 0, 0, 0.05);
   padding: 0.5rem 1rem;
   border-radius: 4px;
   display: inline-block;
   margin: 1rem 0;
 }
 
-/* Light mode */
-@media (prefers-color-scheme: light) {
-  .home-section h2 {
-    color: #213547;
-  }
+/* Dark mode */
+[data-theme="dark"] .home-section h2 {
+  color: #fff;
+}
 
-  .home-section p {
-    color: #555;
-  }
+[data-theme="dark"] .home-section p {
+  color: #ccc;
+}
 
-  .feature-card {
-    background: rgba(0, 0, 0, 0.03);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-  }
+[data-theme="dark"] .feature-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-  .feature-card h3 {
-    color: #213547;
-  }
+[data-theme="dark"] .feature-card:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
 
-  .feature-card p {
-    color: #666;
-  }
+[data-theme="dark"] .feature-card h3 {
+  color: #fff;
+}
 
-  .app-link {
-    background: rgba(0, 0, 0, 0.03);
-    color: #213547;
-  }
+[data-theme="dark"] .feature-card p {
+  color: #aaa;
+}
 
-  .app-link:hover {
-    background: rgba(0, 0, 0, 0.08);
-  }
+[data-theme="dark"] .app-link {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
 
-  .documentation {
-    background: rgba(0, 0, 0, 0.02);
-  }
+[data-theme="dark"] .app-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
 
-  .documentation li {
-    color: #555;
-  }
+[data-theme="dark"] .documentation {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .documentation li {
+  color: #ccc;
+}
+
+[data-theme="dark"] .documentation li strong {
+  color: #fff;
+}
+
+[data-theme="dark"] .loading-container {
+  color: #888;
+}
+
+[data-theme="dark"] .loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top: 4px solid #646cff;
+}
+
+[data-theme="dark"] .error-container {
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .error-container p {
+  color: #ccc;
+}
+
+[data-theme="dark"] .error-details {
+  color: #888;
+  background: rgba(0, 0, 0, 0.3);
 }

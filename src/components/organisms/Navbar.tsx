@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { NavLink } from '../molecules';
+import { NavLink, ThemeToggle } from '../molecules';
 import './Navbar.css';
 
 interface NavItem {
@@ -23,16 +23,19 @@ const Navbar = ({ brand = '🚀 Super App', navItems }: NavbarProps) => {
       <div className="nav-brand">
         <Link to="/">{brand}</Link>
       </div>
-      <ul className="nav-links">
-        {navItems.map((item) => (
-          <NavLink 
-            key={item.to}
-            to={item.to} 
-            label={item.label} 
-            isActive={location.pathname === item.to} 
-          />
-        ))}
-      </ul>
+      <div className="nav-right">
+        <ul className="nav-links">
+          {navItems.map((item) => (
+            <NavLink 
+              key={item.to}
+              to={item.to} 
+              label={item.label} 
+              isActive={location.pathname === item.to} 
+            />
+          ))}
+        </ul>
+        
+      </div>
     </nav>
   );
 };

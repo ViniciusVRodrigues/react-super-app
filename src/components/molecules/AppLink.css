@@ -3,29 +3,27 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.03);
   border-radius: 8px;
   text-decoration: none;
-  color: #fff;
+  color: #213547;
   transition: background 0.3s ease;
 }
 
 .app-link:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .app-link .app-name {
   font-size: 1.1rem;
 }
 
-/* Light mode */
-@media (prefers-color-scheme: light) {
-  .app-link {
-    background: rgba(0, 0, 0, 0.03);
-    color: #213547;
-  }
+/* Dark mode */
+[data-theme="dark"] .app-link {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
 
-  .app-link:hover {
-    background: rgba(0, 0, 0, 0.08);
-  }
+[data-theme="dark"] .app-link:hover {
+  background: rgba(255, 255, 255, 0.1);
 }

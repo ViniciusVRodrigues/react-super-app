@@ -1,18 +1,16 @@
 .code-block {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.05);
   padding: 1rem;
   border-radius: 8px;
   overflow-x: auto;
   font-family: 'Fira Code', monospace;
   font-size: 0.9rem;
-  color: #e0e0e0;
+  color: #333;
   margin-bottom: 1rem;
 }
 
-/* Light mode */
-@media (prefers-color-scheme: light) {
-  .code-block {
-    background: rgba(0, 0, 0, 0.05);
-    color: #333;
-  }
+/* Dark mode */
+[data-theme="dark"] .code-block {
+  background: rgba(0, 0, 0, 0.4);
+  color: #e0e0e0;
 }

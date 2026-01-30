@@ -1,14 +1,14 @@
 .feature-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.03);
   border-radius: 12px;
   padding: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .feature-card .feature-icon {
@@ -19,26 +19,28 @@
 .feature-card h3 {
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
-  color: #fff;
+  color: #213547;
 }
 
 .feature-card p {
   font-size: 0.95rem;
-  color: #aaa;
+  color: #666;
 }
 
-/* Light mode */
-@media (prefers-color-scheme: light) {
-  .feature-card {
-    background: rgba(0, 0, 0, 0.03);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-  }
+/* Dark mode */
+[data-theme="dark"] .feature-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-  .feature-card h3 {
-    color: #213547;
-  }
+[data-theme="dark"] .feature-card:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
 
-  .feature-card p {
-    color: #666;
-  }
+[data-theme="dark"] .feature-card h3 {
+  color: #fff;
+}
+
+[data-theme="dark"] .feature-card p {
+  color: #aaa;
 }

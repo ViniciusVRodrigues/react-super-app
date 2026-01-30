@@ -1,6 +1,6 @@
 .nav-link {
   text-decoration: none;
-  color: #888;
+  color: #555;
   font-weight: 500;
   transition: color 0.3s ease;
   padding: 0.5rem 1rem;
@@ -8,7 +8,7 @@
 }
 
 .nav-link:hover {
-  color: #fff;
+  color: #213547;
 }
 
 .nav-link.active {
@@ -16,9 +16,11 @@
   background: rgba(100, 108, 255, 0.1);
 }
 
-/* Light mode */
-@media (prefers-color-scheme: light) {
-  .nav-link:hover {
-    color: #213547;
-  }
+/* Dark mode */
+[data-theme="dark"] .nav-link {
+  color: #888;
+}
+
+[data-theme="dark"] .nav-link:hover {
+  color: #fff;
 }

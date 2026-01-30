@@ -9,12 +9,12 @@
 }
 
 .remote-page > p {
-  color: #888;
+  color: #555;
   margin-bottom: 2rem;
 }
 
 .remote-info {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.03);
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 2rem;
@@ -27,28 +27,28 @@
 
 .remote-info p {
   margin-bottom: 1rem;
-  color: #ccc;
+  color: #555;
 }
 
 .remote-info pre {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.05);
   padding: 1rem;
   border-radius: 8px;
   overflow-x: auto;
   font-family: 'Fira Code', monospace;
   font-size: 0.9rem;
-  color: #e0e0e0;
+  color: #333;
   margin-bottom: 1rem;
 }
 
 .remote-info code {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.05);
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
 }
 
 .demo-section {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.02);
   border-radius: 12px;
   padding: 1.5rem;
 }
@@ -59,34 +59,36 @@
 }
 
 .demo-section > p {
-  color: #888;
+  color: #555;
   margin-bottom: 1.5rem;
 }
 
-/* Light mode */
-@media (prefers-color-scheme: light) {
-  .remote-page > p {
-    color: #555;
-  }
+/* Dark mode */
+[data-theme="dark"] .remote-page > p {
+  color: #888;
+}
 
-  .remote-info {
-    background: rgba(0, 0, 0, 0.03);
-  }
+[data-theme="dark"] .remote-info {
+  background: rgba(255, 255, 255, 0.05);
+}
 
-  .remote-info p {
-    color: #555;
-  }
+[data-theme="dark"] .remote-info p {
+  color: #ccc;
+}
 
-  .remote-info pre {
-    background: rgba(0, 0, 0, 0.05);
-    color: #333;
-  }
+[data-theme="dark"] .remote-info pre {
+  background: rgba(0, 0, 0, 0.4);
+  color: #e0e0e0;
+}
 
-  .demo-section {
-    background: rgba(0, 0, 0, 0.02);
-  }
+[data-theme="dark"] .remote-info code {
+  background: rgba(255, 255, 255, 0.1);
+}
 
-  .demo-section > p {
-    color: #555;
-  }
+[data-theme="dark"] .demo-section {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .demo-section > p {
+  color: #888;
 }
