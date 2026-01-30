@@ -26,21 +26,3 @@
   font-size: 0.95rem;
   color: #666;
 }
-
-/* Dark mode */
-[data-theme="dark"] .feature-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-[data-theme="dark"] .feature-card:hover {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="dark"] .feature-card h3 {
-  color: #fff;
-}
-
-[data-theme="dark"] .feature-card p {
-  color: #aaa;
-}

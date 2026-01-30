@@ -27,17 +27,3 @@
   display: inline-block;
   margin: 1rem 0;
 }
-
-/* Dark mode */
-[data-theme="dark"] .error-message {
-  background: rgba(255, 100, 100, 0.1);
-}
-
-[data-theme="dark"] .error-message p {
-  color: #ccc;
-}
-
-[data-theme="dark"] .error-details {
-  color: #888;
-  background: rgba(0, 0, 0, 0.3);
-}

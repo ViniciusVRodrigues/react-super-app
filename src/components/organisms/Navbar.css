@@ -14,26 +14,10 @@
   color: #213547;
 }
 
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
 .nav-links {
   display: flex;
   gap: 1.5rem;
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-/* Dark mode */
-[data-theme="dark"] .navbar {
-  background: rgba(0, 0, 0, 0.3);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-[data-theme="dark"] .nav-brand a {
-  color: #fff;
 }

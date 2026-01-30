@@ -15,12 +15,3 @@
   color: #646cff;
   background: rgba(100, 108, 255, 0.1);
 }
-
-/* Dark mode */
-[data-theme="dark"] .nav-link {
-  color: #888;
-}
-
-[data-theme="dark"] .nav-link:hover {
-  color: #fff;
-}

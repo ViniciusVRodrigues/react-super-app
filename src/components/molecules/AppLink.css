@@ -17,13 +17,3 @@
 .app-link .app-name {
   font-size: 1.1rem;
 }
-
-/* Dark mode */
-[data-theme="dark"] .app-link {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
-}
-
-[data-theme="dark"] .app-link:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
